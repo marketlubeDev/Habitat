@@ -1,5 +1,9 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
+import imageOne from "./assets/imageOne.jpg";
+import imageTwo from "./assets/imageTwo.jpg";
+import imageThree from "./assets/imageThree.jpg";
+
 const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,20 +14,17 @@ const App: React.FC = () => {
 
   const heroSlides = [
     {
-      image:
-        "https://readdy.ai/api/search-image?query=Ultra%20luxury%20infinity%20pool%20with%20panoramic%20mountain%20views%2C%20crystal%20clear%20water%20reflecting%20sunset%20sky%2C%20modern%20loungers%2C%20palm%20trees%2C%20architectural%20lighting%2C%205%20star%20resort%20atmosphere%2C%20cinematic%20wide%20shot&width=1440&height=800&seq=1&orientation=landscape",
+      image: imageOne,
       title: "Experience Unparalleled Luxury",
       subtitle: "Where Dreams Meet Paradise",
     },
     {
-      image:
-        "https://readdy.ai/api/search-image?query=Presidential%20suite%20interior%20with%20floor%20to%20ceiling%20windows%2C%20panoramic%20ocean%20view%2C%20modern%20elegant%20furniture%2C%20king%20size%20bed%20with%20premium%20linens%2C%20mood%20lighting%2C%20marble%20flooring%2C%20luxury%20hotel%20room&width=1440&height=800&seq=2&orientation=landscape",
+      image: imageTwo,
       title: "Exquisite Suites & Rooms",
       subtitle: "Your Private Sanctuary",
     },
     {
-      image:
-        "https://readdy.ai/api/search-image?query=Stunning%20rooftop%20infinity%20pool%20at%20sunset%2C%20modern%20cabanas%2C%20panoramic%20city%20views%2C%20ambient%20lighting%2C%20luxurious%20lounge%20area%2C%20high%20end%20resort%20atmosphere%2C%20architectural%20masterpiece&width=1440&height=800&seq=3&orientation=landscape",
+      image: imageThree,
       title: "Dive Into Luxury",
       subtitle: "Unforgettable Moments Await",
     },
@@ -243,7 +244,8 @@ const App: React.FC = () => {
               backgroundPosition: "center",
             }}
           >
-            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div className="absolute inset-0  bg-black/60"></div>
+
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
               <div className="max-w-4xl mx-auto">
                 <h1 className="font-poppins text-6xl md:text-7xl font-black text-white mb-4 leading-none tracking-tight transform transition-all duration-700 hover:scale-105 whitespace-nowrap">
