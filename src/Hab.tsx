@@ -1,8 +1,13 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
+import Profile from "./assets/profile.jpg";
+import { useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
 const App: React.FC = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAutoScrollPaused, setIsAutoScrollPaused] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -98,150 +103,7 @@ const App: React.FC = () => {
 
   return (
     <div className="font-sans text-gray-800">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white bg-opacity-95 shadow-md">
-        <div className="container mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="text-xl sm:text-2xl font-bold text-green-800">
-                Focuz Habitat
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-4 lg:space-x-6 -ml-4">
-              <a
-                href="#home"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    ?.getElementById("home")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-gray-700 hover:text-green-700 transition duration-300 cursor-pointer"
-              >
-                Home
-              </a>
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    ?.getElementById("about")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-gray-700 hover:text-green-700 transition duration-300 cursor-pointer"
-              >
-                About
-              </a>
-              <a
-                href="#amenities"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    ?.getElementById("amenities")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-gray-700 hover:text-green-700 transition duration-300 cursor-pointer"
-              >
-                Amenities
-              </a>
-              <a
-                href="#ayurveda"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    ?.getElementById("ayurveda")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-gray-700 hover:text-green-700 transition duration-300 cursor-pointer"
-              >
-                Ayurveda
-              </a>
-              <a
-                href="#gallery"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    ?.getElementById("gallery")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="text-gray-700 hover:text-green-700 transition duration-300 cursor-pointer"
-              >
-                Gallery
-              </a>
-              <a
-                href="https://wa.me/918592011120?text=I%20would%20like%20to%20know%20more%20about%20Focuz%20Habitat"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-2 bg-green-700 text-white rounded-button hover:bg-green-800 hover:scale-105 transform transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
-              >
-                Contact
-              </a>
-            </div>
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 focus:outline-none cursor-pointer"
-              >
-                <i
-                  className={`fas ${
-                    isMenuOpen ? "fa-times" : "fa-bars"
-                  } text-2xl`}
-                ></i>
-              </button>
-            </div>
-          </div>
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="md:hidden mt-4 pb-4">
-              <a
-                href="#home"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Home
-              </a>
-              <a
-                href="#about"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                About
-              </a>
-              <a
-                href="#services"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Services
-              </a>
-              <a
-                href="#amenities"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Amenities
-              </a>
-              <a
-                href="#ayurveda"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Ayurveda
-              </a>
-              <a
-                href="#gallery"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Gallery
-              </a>
-              <a
-                href="#contact"
-                className="block py-2 text-gray-700 hover:text-green-700"
-              >
-                Contact
-              </a>
-              <button className="mt-2 bg-green-700 text-white px-6 py-2 rounded-button whitespace-nowrap hover:bg-green-800 transition duration-300 w-full cursor-pointer">
-                Book Now
-              </button>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar />
       {/* Hero Section */}
       <section id="home" className="relative h-[calc(100vh-4rem)] md:h-screen">
         {heroSlides.map((slide, index) => (
@@ -519,14 +381,19 @@ const App: React.FC = () => {
                   alt={service.title}
                   className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <i className="fas fa-search-plus text-white text-3xl"></i>
-                </div>
               </div>
             ))}
           </div>
           <div className="text-center mt-10">
-            <button className="bg-green-700 text-white px-8 py-3 rounded-button whitespace-nowrap hover:bg-green-800 transition duration-300 cursor-pointer">
+            <button
+              onClick={() => {
+                navigate("/gallery");
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }, 100);
+              }}
+              className="inline-block bg-green-700 text-white px-8 py-3 rounded-button whitespace-nowrap hover:bg-green-800 transition duration-300 cursor-pointer"
+            >
               View Full Gallery
             </button>
           </div>
@@ -601,22 +468,6 @@ const App: React.FC = () => {
               >
                 {[
                   {
-                    name: "Sarah Johnson",
-                    location: "London, UK",
-                    rating: 5,
-                    text: "My stay at Focuz Habitat was truly transformative. The Ayurvedic treatments, serene environment, and attentive staff made this the perfect wellness retreat. I left feeling completely rejuvenated.",
-                    image:
-                      "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20a%20sophisticated%20woman%20in%20her%2040s%20with%20blonde%20hair%20wearing%20elegant%20business%20attire%20natural%20lighting%20neutral%20background%20confident%20smile&width=100&height=100&seq=19&orientation=squarish",
-                  },
-                  {
-                    name: "Michael Chen",
-                    location: "Singapore",
-                    rating: 5,
-                    text: "An oasis of tranquility with world-class amenities. The perfect balance of luxury and authenticity. The Ayurvedic treatments were exceptional and the staff's attention to detail was impressive.",
-                    image:
-                      "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20asian%20businessman%20in%20his%2030s%20wearing%20modern%20suit%20natural%20lighting%20neutral%20background%20warm%20smile&width=100&height=100&seq=20&orientation=squarish",
-                  },
-                  {
                     name: "Priya Sharma",
                     location: "Mumbai, India",
                     rating: 5,
@@ -625,28 +476,68 @@ const App: React.FC = () => {
                       "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20indian%20woman%20in%20her%2030s%20wearing%20elegant%20traditional%20outfit%20natural%20lighting%20neutral%20background%20genuine%20smile&width=100&height=100&seq=21&orientation=squarish",
                   },
                   {
-                    name: "James Anderson",
-                    location: "New York, USA",
-                    rating: 5,
-                    text: "The perfect escape from city life. The combination of traditional Ayurvedic treatments and modern luxury created an unforgettable experience. The staff's hospitality was outstanding.",
-                    image:
-                      "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20a%20distinguished%20man%20in%20his%2050s%20wearing%20luxury%20suit%20natural%20lighting%20neutral%20background%20confident%20expression&width=100&height=100&seq=22&orientation=squarish",
-                  },
-                  {
-                    name: "Emma Thompson",
-                    location: "Melbourne, Australia",
-                    rating: 5,
-                    text: "A truly magical experience. The attention to detail in every aspect of the resort is remarkable. From the therapeutic treatments to the gourmet cuisine, everything was perfect.",
-                    image:
-                      "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20australian%20woman%20in%20her%2030s%20wearing%20modern%20professional%20attire%20natural%20lighting%20neutral%20background%20bright%20smile&width=100&height=100&seq=23&orientation=squarish",
-                  },
-                  {
                     name: "Ahmed Al-Sayed",
                     location: "Dubai, UAE",
                     rating: 5,
                     text: "Focuz Habitat offers an unparalleled luxury wellness experience. The blend of traditional healing and modern comfort is perfectly executed. Will definitely return for another rejuvenating stay.",
                     image:
                       "https://readdy.ai/api/search-image?query=professional%20headshot%20of%20a%20middle%20eastern%20businessman%20in%20his%2040s%20wearing%20luxury%20suit%20natural%20lighting%20neutral%20background%20welcoming%20smile&width=100&height=100&seq=24&orientation=squarish",
+                  },
+                  {
+                    name: "Rajesh Menon",
+                    location: "Kochi, Kerala",
+                    rating: 5,
+                    text: "As a local, I'm proud to have such a world-class wellness resort in our state. The authentic Kerala experience combined with modern luxury is outstanding. The Ayurvedic treatments are the best I've experienced.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Fatima Al-Rashid",
+                    location: "Abu Dhabi, UAE",
+                    rating: 5,
+                    text: "The hospitality here is exceptional. As an Arabic guest, I felt very comfortable with the privacy and respect for cultural preferences. The halal food options and prayer facilities were well thought out.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Lakshmi Nair",
+                    location: "Thiruvananthapuram, Kerala",
+                    rating: 5,
+                    text: "The traditional Kerala architecture and authentic local cuisine make this resort special. The staff's knowledge of local culture and traditions adds a personal touch to the experience.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Mohammed Al-Qasimi",
+                    location: "Sharjah, UAE",
+                    rating: 5,
+                    text: "The attention to detail in accommodating Arabic guests is remarkable. From the prayer room to the traditional Arabic coffee service, everything was perfect. The Ayurvedic treatments were a unique experience.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Arjun Patel",
+                    location: "Gujarat, India",
+                    rating: 5,
+                    text: "Coming from Gujarat, I was amazed by the authentic Kerala experience. The backwater views and traditional architecture are breathtaking. The staff's attention to dietary preferences was impressive.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Meera Singh",
+                    location: "Delhi, India",
+                    rating: 5,
+                    text: "The perfect blend of luxury and wellness. As someone from Delhi, I appreciate the peaceful environment and authentic Kerala cuisine. The Ayurvedic treatments were transformative.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Vikram Reddy",
+                    location: "Hyderabad, India",
+                    rating: 5,
+                    text: "The resort's attention to South Indian hospitality is remarkable. The traditional Kerala massage and treatments were exceptional. A perfect getaway from city life.",
+                    image: Profile,
+                  },
+                  {
+                    name: "Ananya Chatterjee",
+                    location: "Kolkata, India",
+                    rating: 5,
+                    text: "The cultural fusion of Kerala's traditions with modern amenities is fascinating. The resort's commitment to wellness and authentic experiences makes it stand out. A must-visit destination!",
+                    image: Profile,
                   },
                 ].map((testimonial, index) => (
                   <div key={index} className="w-[400px] flex-shrink-0">
@@ -914,243 +805,7 @@ touch-action: pan-x;
           </div>
         </div>
       </section>
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white pt-16 pb-8">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
-            <div>
-              <h3 className="text-2xl font-bold mb-6">Focuz Habitat</h3>
-              <p className="text-gray-400 mb-6">
-                A premium health resort nestled in the serene landscape of
-                Malappuram, Kerala, offering a perfect blend of luxury,
-                wellness, and authentic experiences.
-              </p>
-              <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                >
-                  <i className="fab fa-facebook-f text-lg"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                >
-                  <i className="fab fa-twitter text-lg"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                >
-                  <i className="fab fa-instagram text-lg"></i>
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                >
-                  <i className="fab fa-linkedin-in text-lg"></i>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#home"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#about"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#amenities"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Amenities
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#ayurveda"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Ayurveda
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#gallery"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Gallery
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contact"
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Our Services</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Rooms & Suites
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Ayurvedic Spa
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Banquet Hall
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Swimming Pool
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Fitness Centre
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document
-                        ?.getElementById("about")
-                        ?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
-                  >
-                    Play Area
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Newsletter</h3>
-              <p className="text-gray-400 mb-6">
-                Subscribe to our newsletter for special offers, wellness tips,
-                and updates.
-              </p>
-              <form>
-                <div className="flex mb-4">
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    className="bg-gray-800 text-white px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent border-none text-sm w-full"
-                  />
-                  <button className="bg-green-700 text-white px-4 py-2 rounded-r-lg hover:bg-green-800 transition duration-300 whitespace-nowrap cursor-pointer">
-                    <i className="fas fa-paper-plane"></i>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <hr className="border-gray-800 my-8" />
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <p className="text-gray-400 text-sm text-center sm:text-left">
-              &copy; {new Date().getFullYear()} Focuz Habitat. All rights
-              reserved. - made by{" "}
-              <a
-                href="https://www.marketlube.in"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-white transition duration-300"
-              >
-                marketlube
-              </a>
-            </p>
-            <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6">
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-sm transition duration-300 cursor-pointer"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-sm transition duration-300 cursor-pointer"
-              >
-                Terms of Service
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-sm transition duration-300 cursor-pointer"
-              >
-                Cookie Policy
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       {/* WhatsApp Button */}
       <a
         href="https://wa.me/918592011120"
