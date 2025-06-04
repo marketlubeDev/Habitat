@@ -4,6 +4,7 @@ import Profile from "./assets/profile.jpg";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { useMediaQuery } from "react-responsive";
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const App: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const isMobile = useMediaQuery({ maxWidth: 640 });
 
   const heroSlides = [
     {
@@ -371,7 +373,7 @@ const App: React.FC = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {services.map((service, index) => (
+            {services.slice(0, isMobile ? 3 : 6).map((service, index) => (
               <div
                 key={index}
                 className="relative overflow-hidden rounded-lg shadow-lg h-80 cursor-pointer"
