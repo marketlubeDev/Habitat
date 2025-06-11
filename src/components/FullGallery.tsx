@@ -22,11 +22,6 @@ const FullGallery: React.FC = () => {
 
     {
       image:
-        "https://static.readdy.ai/image/657a74ec9f9a047779d17698eb1c3538/d7a4c1d13c7419afdb6ea9cbcd64fce2.webp",
-      title: "Luxury Room",
-    },
-    {
-      image:
         "https://static.readdy.ai/image/657a74ec9f9a047779d17698eb1c3538/c115a24001d6c2dcdfbc912cdc2fc314.webp",
       title: "Spa Treatment",
     },
@@ -35,10 +30,19 @@ const FullGallery: React.FC = () => {
         "https://static.readdy.ai/image/657a74ec9f9a047779d17698eb1c3538/b0edf65d9ee5f801d1a59c43a8aa06b0.webp",
       title: "Banquet Hall",
     },
+    // {
+    //   image:
+    //     "https://static.readdy.ai/image/657a74ec9f9a047779d17698eb1c3538/d7a4c1d13c7419afdb6ea9cbcd64fce2.webp",
+    //   title: "Luxury Room",
+    // },
     {
       image:
         "https://static.readdy.ai/image/657a74ec9f9a047779d17698eb1c3538/471ff8a5555a4c5fe4fa0990416335e3.webp",
       title: "Swimming Pool",
+    },
+    {
+      image: habit7,
+      title: "Resort View",
     },
     {
       image:
@@ -85,10 +89,6 @@ const FullGallery: React.FC = () => {
     },
     {
       image: habit6,
-      title: "Resort View",
-    },
-    {
-      image: habit7,
       title: "Resort View",
     },
   ];
