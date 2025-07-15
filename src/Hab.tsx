@@ -106,7 +106,6 @@ const App: React.FC = () => {
   return (
     <div className="font-sans text-gray-800">
       <Navbar />
-      {/* Hero Section */}
       <section id="home" className="relative h-[calc(100vh-4rem)] md:h-screen">
         {heroSlides.map((slide, index) => (
           <div
@@ -162,7 +161,7 @@ const App: React.FC = () => {
             </div>
           </div>
         ))}
-        {/* Slide Indicators */}
+
         <div className="absolute bottom-10 left-0 right-0 flex justify-center space-x-3">
           {heroSlides.map((_, index) => (
             <button
