@@ -1,5 +1,31 @@
 import React, { useState } from 'react';
-import { IoIosNotificationsOutline } from "react-icons/io";
+import { 
+  Home, 
+  Users, 
+  MessageSquare, 
+  Link, 
+  Settings, 
+  BarChart3,
+  Calendar,
+  Bell,
+  Search,
+  User,
+  LogOut,
+  TrendingUp,
+  Eye,
+  Star,
+  Plus,
+  Edit,
+  Trash2,
+  Mail,
+  Phone,
+  MapPin,
+  Copy,
+  Send,
+  Check,
+  ExternalLink,
+  Filter
+} from 'lucide-react';
 import logo from "../assets/habitlogo.jpg";
 
 interface Client {
@@ -23,9 +49,16 @@ interface Feedback {
 }
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'admin dashboard' | 'clients' | 'feedback' | 'links'>('admin dashboard');
+  const [activeTab, setActiveTab] = useState<'admin dashboard' | 'clients' | 'feedback' | 'links' | 'bookings'>('admin dashboard');
   const [showAddClient, setShowAddClient] = useState(false);
   const [newClient, setNewClient] = useState({ name: '', email: '', phone: '' });
+  const [selectedClient, setSelectedClient] = useState('');
+  const [customMessage, setCustomMessage] = useState('Share your wellness journey with us! Your feedback helps us create better experiences for everyone. We value every story. 💚');
+  const [copiedLink, setCopiedLink] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterRating, setFilterRating] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFeedback, setSelectedFeedback] = useState<any>(null);
 
   // Mock data - replace with real data from your backend
   const [clients, setClients] = useState<Client[]>([
@@ -127,6 +160,43 @@ const Admin: React.FC = () => {
     ));
   };
 
+  const generateLink = () => {
+    const randomId = Math.random().toString(36).substr(2, 9);
+    return `https://focuzhabitat.com/feedback/${randomId}`;
+  };
+
+  const copyToClipboard = (link: string) => {
+    navigator.clipboard.writeText(link);
+    setCopiedLink(link);
+    setTimeout(() => setCopiedLink(''), 2000);
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Completed':
+        return 'bg-green-100 text-green-800';
+      case 'Sent':
+        return 'bg-blue-100 text-blue-800';
+      case 'Pending':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getFeedbackStatusColor = (status: string) => {
+    switch (status) {
+      case 'Published':
+        return 'bg-green-100 text-green-800';
+      case 'Pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Rejected':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <svg
@@ -146,79 +216,80 @@ const Admin: React.FC = () => {
       <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200">
-            <div className="text-center">
-              <img src={logo} alt="Focuz Habitat" className="h-10 w-auto" />
-              {/* <p className="text-xs text-gray-500 mt-1">Admin Panel</p> */}
+          <div className="p-3.5 border-b border-gray-200">
+            <div className="flex items-center justify-center">
+              <img src={logo} alt="Focuz Habitat" className="h-12 w-auto" />
             </div>
+            {/* <p className="text-sm text-gray-600 text-center mt-2">Admin Panel</p> */}
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
+          <nav className="flex-1 py-6">
             <button
               onClick={() => setActiveTab('admin dashboard')}
-              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+              className={`w-full flex items-center px-6 py-3 text-left transition-colors ${
                 activeTab === 'admin dashboard'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-2 border-emerald-600'
+                  : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
-              </svg>
-           Dashboard
+              <Home className="w-5 h-5 mr-3" />
+              Dashboard
             </button>
 
             <button
               onClick={() => setActiveTab('clients')}
-              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+              className={`w-full flex items-center px-6 py-3 text-left transition-colors ${
                 activeTab === 'clients'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-2 border-emerald-600'
+                  : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-              </svg>
+              <Users className="w-5 h-5 mr-3" />
               Clients
             </button>
 
             <button
-              onClick={() => setActiveTab('feedback')}
-              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'feedback'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              onClick={() => setActiveTab('links')}
+              className={`w-full flex items-center px-6 py-3 text-left transition-colors ${
+                activeTab === 'links'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-2 border-emerald-600'
+                  : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+              <Link className="w-5 h-5 mr-3" />
+              Feedback Links
+            </button>
+
+            <button
+              onClick={() => setActiveTab('feedback')}
+              className={`w-full flex items-center px-6 py-3 text-left transition-colors ${
+                activeTab === 'feedback'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-2 border-emerald-600'
+                  : 'text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <MessageSquare className="w-5 h-5 mr-3" />
               View Feedback
             </button>
 
             <button
-              onClick={() => setActiveTab('links')}
-              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                activeTab === 'links'
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              onClick={() => setActiveTab('bookings')}
+              className={`w-full flex items-center px-6 py-3 text-left transition-colors ${
+                activeTab === 'bookings'
+                  ? 'bg-emerald-50 text-emerald-600 border-r-2 border-emerald-600'
+                  : 'text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-              Feedback Links
+              <Calendar className="w-5 h-5 mr-3" />
+              Bookings
             </button>
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-gray-200">
-            <button className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-              <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
+          <div className="p-6 border-t border-gray-200">
+            <button className="w-full flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+              <LogOut className="w-5 h-5 mr-3" />
               Logout
             </button>
           </div>
@@ -236,9 +307,7 @@ const Admin: React.FC = () => {
             
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search..."
@@ -247,15 +316,13 @@ const Admin: React.FC = () => {
               </div>
               
               <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                <IoIosNotificationsOutline className="w-5 h-5" />
+                <Bell className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
               </button>
               
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
+                  <User className="w-4 h-4 text-emerald-600" />
                 </div>
                 <span className="text-sm text-gray-700">Admin</span>
               </div>
@@ -267,100 +334,84 @@ const Admin: React.FC = () => {
         <main className="p-6">
           {activeTab === 'admin dashboard' && (
             <div className="space-y-6">
-              {/* Stats Cards */}
+              {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Total Clients</p>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Clients</p>
                       <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
-                      <p className="text-xs text-green-600">+12% from last month</p>
+                      <p className="text-sm text-green-600">+12% from last month</p>
+                    </div>
+                    <div className="p-3 rounded-full bg-blue-500">
+                      <Users className="w-6 h-6 text-white" />
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Feedback Received</p>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Feedback Received</p>
                       <p className="text-2xl font-bold text-gray-900">{feedbacks.length}</p>
-                      <p className="text-xs text-green-600">+8% from last month</p>
+                      <p className="text-sm text-green-600">+8% from last month</p>
+                    </div>
+                    <div className="p-3 rounded-full bg-green-500">
+                      <MessageSquare className="w-6 h-6 text-white" />
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 6v6m-4-6h8m-8 6h8" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Active Bookings</p>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Active Bookings</p>
                       <p className="text-2xl font-bold text-gray-900">32</p>
-                      <p className="text-xs text-green-600">+15% from last month</p>
+                      <p className="text-sm text-green-600">+15% from last month</p>
+                    </div>
+                    <div className="p-3 rounded-full bg-purple-500">
+                      <Calendar className="w-6 h-6 text-white" />
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600">Average Rating</p>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Average Rating</p>
                       <p className="text-2xl font-bold text-gray-900">4.8</p>
-                      <p className="text-xs text-green-600">+0.2 from last month</p>
+                      <p className="text-sm text-green-600">+0.2 from last month</p>
+                    </div>
+                    <div className="p-3 rounded-full bg-yellow-500">
+                      <Star className="w-6 h-6 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Recent Feedback & Quick Actions */}
+              {/* Recent Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                  <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Recent Feedback</h3>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    {feedbacks.slice(0, 3).map((feedback) => (
-                      <div key={feedback.id} className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                            <span className="text-green-600 font-medium">{feedback.clientName.charAt(0)}</span>
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-900">{feedback.clientName}</p>
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Feedback</h3>
+                  <div className="space-y-4">
+                    {feedbacks.slice(0, 3).map((feedback, index) => (
+                      <div key={feedback.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="font-medium text-gray-900">{feedback.clientName}</p>
                             <div className="flex items-center space-x-1">
-                              {renderStars(feedback.rating)}
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < feedback.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
                             </div>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">{feedback.comment}</p>
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-sm text-gray-600">{feedback.comment}</p>
+                          <p className="text-xs text-gray-500 mt-1">
                             {new Date(feedback.submittedAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -369,24 +420,25 @@ const Admin: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-                  <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-                  </div>
-                  <div className="p-6 space-y-3">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                  <div className="space-y-3">
                     <button 
                       onClick={() => setActiveTab('links')}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                      className="w-full bg-emerald-600 text-white py-3 px-4 rounded-lg hover:bg-emerald-700 transition-colors"
                     >
                       Generate Feedback Link
                     </button>
                     <button 
                       onClick={() => setActiveTab('clients')}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                      className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
                     >
                       Add New Client
                     </button>
-                    <button className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <button 
+                      onClick={() => setActiveTab('bookings')}
+                      className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors"
+                    >
                       View All Bookings
                     </button>
                   </div>
@@ -397,91 +449,84 @@ const Admin: React.FC = () => {
 
           {activeTab === 'clients' && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Client Management</h3>
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-800">Client Management</h2>
                 <button
                   onClick={() => setShowAddClient(true)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center space-x-2"
                 >
-                  Add New Client
+                  <Plus className="w-4 h-4" />
+                  <span>Add Client</span>
                 </button>
               </div>
 
-              {/* Add Client Modal */}
-              {showAddClient && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div className="bg-white rounded-xl p-6 w-full max-w-md">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Add New Client</h3>
-                    <div className="space-y-4">
-                      <input
-                        type="text"
-                        placeholder="Client Name"
-                        value={newClient.name}
-                        onChange={(e) => setNewClient({...newClient, name: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <input
-                        type="email"
-                        placeholder="Email Address"
-                        value={newClient.email}
-                        onChange={(e) => setNewClient({...newClient, email: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <input
-                        type="tel"
-                        placeholder="Phone Number"
-                        value={newClient.phone}
-                        onChange={(e) => setNewClient({...newClient, phone: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                    </div>
-                    <div className="flex space-x-3 mt-6">
-                      <button
-                        onClick={addClient}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                      >
-                        Add Client
-                      </button>
-                      <button
-                        onClick={() => setShowAddClient(false)}
-                        className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Search */}
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search clients..."
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+              </div>
 
               {/* Clients Table */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Join Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Client
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Contact
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Location
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Visits
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {clients.map((client) => (
                         <tr key={client.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                <span className="text-green-600 font-medium">{client.name.charAt(0)}</span>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{client.name}</div>
+                              <div className="text-sm text-gray-500">Joined: {client.joinDate}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="space-y-1">
+                              <div className="flex items-center text-sm text-gray-900">
+                                <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                                {client.email}
                               </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{client.name}</div>
+                              <div className="flex items-center text-sm text-gray-500">
+                                <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                                {client.phone}
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{client.email}</div>
-                            <div className="text-sm text-gray-500">{client.phone}</div>
+                            <div className="flex items-center text-sm text-gray-900">
+                              <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                              New York, USA
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">3 visits</div>
+                            <div className="text-sm text-gray-500">Last: 2024-02-28</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -492,19 +537,425 @@ const Admin: React.FC = () => {
                               {client.status}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(client.joinDate).toLocaleDateString()}
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <button className="text-blue-600 hover:text-blue-800">
+                                <Edit className="w-4 h-4" />
+                              </button>
+                              <button className="text-red-600 hover:text-red-800">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Add Client Modal */}
+              {showAddClient && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                  <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Add New Client</h3>
+                    <div className="space-y-4">
+                      <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={newClient.name}
+                        onChange={(e) => setNewClient({...newClient, name: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={newClient.email}
+                        onChange={(e) => setNewClient({...newClient, email: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <input
+                        type="tel"
+                        placeholder="Phone"
+                        value={newClient.phone}
+                        onChange={(e) => setNewClient({...newClient, phone: e.target.value})}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Location"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div className="flex space-x-3 mt-6">
+                      <button
+                        onClick={() => setShowAddClient(false)}
+                        className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={addClient}
+                        className="flex-1 bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors"
+                      >
+                        Add Client
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'feedback' && (
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-800">Feedback Management</h2>
+                <div className="flex items-center space-x-4">
+                  <div className="text-sm text-gray-600">
+                    Total: {feedbacks.length} | Avg Rating: 4.7/5
+                  </div>
+                </div>
+              </div>
+
+              {/* Filters */}
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex flex-wrap items-center gap-4">
+                  <div className="relative flex-1 min-w-60">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder="Search feedback..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                  <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="published">Published</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                  <select
+                    value={filterRating}
+                    onChange={(e) => setFilterRating(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="all">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Feedback List */}
+              <div className="space-y-4">
+                {feedbacks.map((feedback) => (
+                  <div key={feedback.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                          <User className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{feedback.clientName}</h3>
+                          <p className="text-sm text-gray-600">{feedback.clientEmail}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center space-x-1 mb-1">
+                          {renderStars(feedback.rating)}
+                          <span className="text-sm text-gray-600 ml-2">{feedback.rating}/5</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <Calendar className="w-4 h-4" />
+                          <span>{new Date(feedback.submittedAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="font-medium text-gray-900 mb-2">Feedback</h4>
+                      <p className="text-gray-700 leading-relaxed">{feedback.comment}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-600">Services:</span>
+                          <div className="flex flex-wrap gap-1">
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              Wellness Treatment
+                            </span>
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              Spa
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Stay: 3 days
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getFeedbackStatusColor(feedback.status === 'new' ? 'Pending' : 'Published')}`}>
+                          {feedback.status === 'new' ? 'Pending' : 'Published'}
+                        </span>
+                        <button
+                          onClick={() => setSelectedFeedback(feedback)}
+                          className="text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                        >
+                          <Eye className="w-4 h-4" />
+                          <span>View Details</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Feedback Detail Modal */}
+              {selectedFeedback && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                  <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-bold text-gray-900">Feedback Details</h3>
+                      <button
+                        onClick={() => setSelectedFeedback(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                          <User className="w-6 h-6 text-emerald-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{selectedFeedback.clientName}</h4>
+                          <p className="text-sm text-gray-600">{selectedFeedback.clientEmail}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                          <div className="flex items-center space-x-2">
+                            {renderStars(selectedFeedback.rating)}
+                            <span className="text-sm text-gray-600">{selectedFeedback.rating}/5</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                          <p className="text-sm text-gray-900">{new Date(selectedFeedback.submittedAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <p className="text-gray-900">Feedback</p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Feedback</label>
+                        <p className="text-gray-700 leading-relaxed">{selectedFeedback.comment}</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Services Used</label>
+                          <div className="flex flex-wrap gap-1">
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              Wellness Treatment
+                            </span>
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              Spa
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Stay Duration</label>
+                          <p className="text-sm text-gray-900">3 days</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-3 mt-6">
+                      <button className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                        Approve & Publish
+                      </button>
+                      <button className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+                        Reject
+                      </button>
+                      <button
+                        onClick={() => setSelectedFeedback(null)}
+                        className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'links' && (
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-800">Feedback Links</h2>
+              </div>
+
+              {/* Generate New Link */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Generate New Feedback Link</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Client</label>
+                    <select
+                      value={selectedClient}
+                      onChange={(e) => setSelectedClient(e.target.value)}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="">Choose a client...</option>
+                      {clients.map((client) => (
+                        <option key={client.id} value={client.id}>
+                          {client.name} ({client.email})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Custom Message (Optional)</label>
+                    <textarea
+                      value={customMessage}
+                      onChange={(e) => setCustomMessage(e.target.value)}
+                      placeholder="Add a personal message..."
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+                <div className="flex space-x-3 mt-4">
+                  <button
+                    disabled={!selectedClient}
+                    className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    <Link className="w-4 h-4" />
+                    <span>Generate Link</span>
+                  </button>
+                  <button
+                    disabled={!selectedClient}
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center space-x-2"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Generate & Send</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Generated Links Table */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div className="p-6 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-800">Generated Links</h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Client
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Feedback Link
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Created
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Responses
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {clients.map((client) => (
+                        <tr key={client.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{client.name}</div>
+                              <div className="text-sm text-gray-500">{client.email}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-2">
+                              <code className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded flex-1 truncate">
+                                {client.feedbackLink || 'No link generated yet'}
+                              </code>
+                              {client.feedbackLink && (
+                                <button
+                                  onClick={() => copyToClipboard(client.feedbackLink)}
+                                  className="text-blue-600 hover:text-blue-800 flex-shrink-0"
+                                >
+                                  {copiedLink === client.feedbackLink ? (
+                                    <Check className="w-4 h-4 text-green-600" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {client.joinDate}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              client.feedbackLink ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
+                            }`}>
+                              {client.feedbackLink ? 'Generated' : 'Pending'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            0
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button
-                              onClick={() => generateFeedbackLink(client.id)}
-                              className="text-green-600 hover:text-green-900 mr-3"
-                            >
-                              Generate Link
-                            </button>
-                            <button className="text-blue-600 hover:text-blue-900">
-                              Edit
-                            </button>
+                            <div className="flex space-x-2">
+                              {client.feedbackLink && (
+                                <>
+                                  <button className="text-blue-600 hover:text-blue-800">
+                                    <ExternalLink className="w-4 h-4" />
+                                  </button>
+                                  <button className="text-green-600 hover:text-green-800">
+                                    <Send className="w-4 h-4" />
+                                  </button>
+                                </>
+                              )}
+                              {!client.feedbackLink && (
+                                <button
+                                  onClick={() => generateFeedbackLink(client.id)}
+                                  className="text-emerald-600 hover:text-emerald-800"
+                                >
+                                  <Link className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -515,117 +966,21 @@ const Admin: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'feedback' && (
+          {activeTab === 'bookings' && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Client Feedback</h3>
-                <div className="flex space-x-2">
-                  <button className="px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-900">
-                    All
-                  </button>
-                  <button className="px-3 py-1 text-sm font-medium text-green-600 bg-green-50 rounded-lg">
-                    New
-                  </button>
-                  <button className="px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-900">
-                    Reviewed
-                  </button>
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-800">Bookings Management</h2>
+              </div>
+
+              {/* Bookings Content */}
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Bookings</h3>
+                <div className="text-center py-8">
+                  <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No bookings available at the moment.</p>
+                  <p className="text-sm text-gray-500 mt-2">Booking management features coming soon.</p>
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                {feedbacks.map((feedback) => (
-                  <div key={feedback.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                            <span className="text-green-600 font-medium">{feedback.clientName.charAt(0)}</span>
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3">
-                            <h4 className="text-lg font-semibold text-gray-900">{feedback.clientName}</h4>
-                            <span className="text-sm text-gray-500">{feedback.clientEmail}</span>
-                            <div className="flex items-center space-x-1">
-                              {renderStars(feedback.rating)}
-                            </div>
-                          </div>
-                          <p className="text-gray-600 mt-2">{feedback.comment}</p>
-                          <p className="text-sm text-gray-400 mt-2">
-                            Submitted on {new Date(feedback.submittedAt).toLocaleDateString()} at {new Date(feedback.submittedAt).toLocaleTimeString()}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {feedback.status === 'new' && (
-                          <button
-                            onClick={() => markFeedbackAsReviewed(feedback.id)}
-                            className="px-3 py-1 text-sm font-medium text-green-600 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-                          >
-                            Mark as Reviewed
-                          </button>
-                        )}
-                        {feedback.status === 'reviewed' && (
-                          <span className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-lg">
-                            Reviewed
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'links' && (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-gray-900">Feedback Links</h3>
-                <p className="text-sm text-gray-600">Generate unique feedback links for each client</p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                {clients.map((client) => (
-                  <div key={client.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                          <span className="text-green-600 font-medium">{client.name.charAt(0)}</span>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">{client.name}</h4>
-                          <p className="text-sm text-gray-500">{client.email}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        {client.feedbackLink ? (
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="text"
-                              value={client.feedbackLink}
-                              readOnly
-                              className="px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm w-80"
-                            />
-                            <button
-                              onClick={() => navigator.clipboard.writeText(client.feedbackLink)}
-                              className="px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700"
-                            >
-                              Copy
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => generateFeedbackLink(client.id)}
-                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
-                          >
-                            Generate Link
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           )}
