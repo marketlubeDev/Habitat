@@ -988,6 +988,13 @@ will-change: transform;
                   <a
                     href="#gallery"
                     className="text-gray-400 hover:text-white transition duration-300 cursor-pointer"
+                    onClick={e => {
+                      e.preventDefault();
+                      const el = document.getElementById("gallery");
+                      if (el) {
+                        el.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }
+                    }}
                   >
                     Gallery
                   </a>

@@ -315,7 +315,7 @@ const App: React.FC = () => {
                     href="https://wa.me/918592011120?text=I%20want%20to%20book%20rooms"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white text-green-800 px-10 py-4 rounded-button whitespace-nowrap transition-all duration-500 text-base font-poppins font-bold tracking-widest uppercase cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 hover:bg-opacity-90"
+                    className="bg-white text-green-800 px-10 py-4 rounded-button whitespace-nowrap transition-all duration-500 text-base font-poppins font-bold tracking-widest uppercase cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 hover:bg-transparent hover:text-white hover:border-2 hover:border-white"
                   >
                     Book Now
                   </a>
@@ -325,7 +325,7 @@ const App: React.FC = () => {
                         ?.getElementById("services")
                         ?.scrollIntoView({ behavior: "smooth" })
                     }
-                    className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-button whitespace-nowrap transition-all duration-500 text-base font-poppins font-bold tracking-widest uppercase cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 hover:bg-white hover:bg-opacity-20"
+                    className="bg-transparent border-2 border-white text-white px-10 py-4 rounded-button whitespace-nowrap transition-all duration-500 text-base font-poppins font-bold tracking-widest uppercase cursor-pointer transform hover:scale-105 hover:shadow-2xl hover:-translate-y-1 hover:bg-white hover:bg-opacity-20 hover:text-green-800"
                   >
                     Explore Resort
                   </button>
@@ -970,7 +970,7 @@ touch-action: pan-x;
                         className="flex items-center space-x-4 cursor-pointer"
                       >
                         <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
-                          <i className="fas fa-phone-alt text-green-600 text-xl"></i>
+                          <i className="fas fa-phone text-green-600 text-xl transform rotate-15"></i>
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import habit1 from "../assets/habit1.jpg";
@@ -14,6 +14,11 @@ import habit10 from "../assets/habit10.jpg";
 import habit11 from "../assets/habit11.jpg";
 
 const FullGallery: React.FC = () => {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const galleryImages = [
     {
       image: habit5,
